@@ -5,10 +5,11 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
 import { HomeComponent } from './features/home/home.component';
-import { FakeBackendProvider } from './seedwork/fake-backend';
-import { AlertService } from './services';
 import { AlertComponent } from './features/alert/alert.component';
+
+import { FakeBackendProvider } from './seedwork/fake-backend';
 
 
 @NgModule({
@@ -24,7 +25,6 @@ import { AlertComponent } from './features/alert/alert.component';
     HttpClientModule
   ],
   providers: [
-    AlertService,
     FakeBackendProvider
   ],
   bootstrap: [AppComponent]

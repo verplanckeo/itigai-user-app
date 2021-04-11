@@ -31,6 +31,9 @@ export class AlertComponent implements OnInit, OnDestroy {
         if(!alert.message){
           //below, in this method, you see we clear the alerts when we navigate away, that is why we only keep the alerts after we change our route
           this.alerts = this.alerts.filter(a => a.keepAfterRouteChange); 
+
+          // remove 'keepAfterRouteChange' flag after reset
+          this.alerts.forEach(x => delete x.keepAfterRouteChange);
           return;
         }
 
@@ -38,9 +41,9 @@ export class AlertComponent implements OnInit, OnDestroy {
         this.alerts.push(alert);
 
         //auto close alert
-        // if(alert.autoClose){
-        //   setTimeout(() => { this.removeAlert(alert); }, 3000);
-        // }
+        if(alert.autoClose){
+          setTimeout(() => { this.removeAlert(alert); }, 3000);
+        }
       });
 
       this.routeSubscription = this.router.events.subscribe(evt => {
@@ -60,10 +63,16 @@ export class AlertComponent implements OnInit, OnDestroy {
     if(!this.alerts.includes(alert)) return;
 
     if(this.fade){
+
+      alert.fade = true;
+
+      // remove alert after faded out
       setTimeout(() => {
         this.alerts = this.alerts.filter(a => a !== alert);
       }, 250);
+
     }else{
+      // remove alert
       this.alerts = this.alerts.filter(a => a !== alert);
     }
   }
@@ -81,10 +90,6 @@ export class AlertComponent implements OnInit, OnDestroy {
     }
 
     classes.push(alertTypeClass[alert.type]);
-
-    if(alert.fade){
-      classes.push('fade');
-    }
 
     return classes.join(' ');
   }

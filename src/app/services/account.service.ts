@@ -12,9 +12,9 @@ import { User } from '../models';
 })
 export class AccountService {
 
-  //The BehaviorSubject has the characteristic that it stores the “current” value. 
+  //The BehaviorSubject has the characteristic that it stores the “current” value.
   //This means that you can always directly get the last emitted value from the BehaviorSubject.
-  //If you subscribe to it, the BehaviorSubject will directly emit the current value to the subscriber. 
+  //If you subscribe to it, the BehaviorSubject will directly emit the current value to the subscriber.
   //Even if the subscriber subscribes much later than the value was stored.
   private userSubject: BehaviorSubject<User>;
   public user: Observable<User>;
@@ -22,7 +22,7 @@ export class AccountService {
   constructor(
     private router:Router,
     private http:HttpClient
-  ) { 
+  ) {
     //this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(localStorageKeys.user)!)); //using the non-null operator "!" also works - only use this when you know what you do
     this.userSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem(localStorageKeys.user) || null));
     this.user = this.userSubject.asObservable();
@@ -38,6 +38,7 @@ export class AccountService {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem(localStorageKeys.user, JSON.stringify(user));
         this.userSubject.next(user);
+        console.log(user);
         return user;
       }));
   }

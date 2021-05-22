@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,7 +9,11 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './features/home/home.component';
 import { AlertComponent } from './features/alert/alert.component';
 
+//can not add these interceptors to the index file because it would add circular dependencies
+import { JwtInterceptor } from './seedwork/jwt.interceptor';
+import { ErrorInterceptor } from './seedwork/error.interceptor';
 import { FakeBackendProvider } from './seedwork/fake-backend';
+
 
 
 @NgModule({
@@ -25,6 +29,8 @@ import { FakeBackendProvider } from './seedwork/fake-backend';
     HttpClientModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     FakeBackendProvider
   ],
   bootstrap: [AppComponent]

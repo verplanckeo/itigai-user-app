@@ -38,10 +38,10 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
 
     this.loading = true;
-    
+
     let username = this.f.username.value;
     let password = this.f.password.value;
-    
+
     this.accountService.login(username, password)
       .pipe(first())
       .subscribe({

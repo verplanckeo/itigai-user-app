@@ -58,4 +58,17 @@ export class AccountService {
   getAll(): Observable<User[]>{
     return this.http.get<User[]>(apiUrls.user.users);
   }
+
+  delete(id: string){
+    const apiUsersUrl = apiUrls.user.users;
+
+    return this.http.delete(`${apiUsersUrl}/${id}`)
+      .pipe(map(x => {
+        //when logged in user removes their own user record, logout
+        if(id === this.userValue.id){
+          this.logout();
+        }
+        return x;
+      }));
+  }
 }

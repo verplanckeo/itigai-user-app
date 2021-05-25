@@ -29,6 +29,8 @@ export class FakeBackendInterceptor implements HttpInterceptor{
                     return login();
                 case url === apiUrls.user.users && method === "GET":
                     return getUsers();
+                case url.startsWith(apiUrls.user.users) && method === "DELETE":
+                    return deleteUser();
                 default:
                     // pass through all other requests
                     return next.handle(request);
@@ -37,21 +39,21 @@ export class FakeBackendInterceptor implements HttpInterceptor{
 
         function register(): Observable<HttpResponse<undefined>>{
             const user = body;
-            
+
             if(users.find((x: { username: string; }) => x.username === user.username)){
-                return error(`User with ${user.username} already exists`);                
+                return error(`User with ${user.username} already exists`);
             }
 
             user.id = Guid.create();
             users.push(user);
             localStorage.setItem(localStorageKeys.users, JSON.stringify(users));
             return ok();
-        } 
+        }
 
         function login(): Observable<HttpResponse<User>>{
             const { username, password } = body;
             let user = users.find((u: { username: string, password: string}) => u.username === username && u.password === password);
-            
+
             if(!user) return error('Username or password is incorrect');
 
             return ok({
@@ -75,7 +77,18 @@ export class FakeBackendInterceptor implements HttpInterceptor{
             if(!isLoggedIn()) return unauthorized();
             return ok(users);
         }
-        
+
+        function deleteUser(){
+          if(!isLoggedIn()) return unauthorized();
+
+          var splittedUrl = url.split('/');
+          var id = splittedUrl[splittedUrl.length -1];
+          users = users.filter((u: { id: string }) => u.id !== id);
+
+          localStorage.setItem(localStorageKeys.users, JSON.stringify(users));
+          return ok();
+        }
+
 
         // Http helper methods
 
@@ -83,7 +96,7 @@ export class FakeBackendInterceptor implements HttpInterceptor{
             return of(new HttpResponse({ status: 200, body }))
                 .pipe(delay(1000)); // delay observable to simulate server api call
         }
-        
+
         function error(message: string) {
             return throwError({ error: { message } })
                 .pipe(materialize(), delay(1000), dematerialize()); // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648);

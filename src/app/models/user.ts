@@ -5,6 +5,7 @@ export class User{
     password: string;
     firstName: string;
     lastName: string;
+    isDeleting: boolean;
 
     constructor(){}
 
@@ -13,13 +14,14 @@ export class User{
         password: string,
         firstName: string,
         lastName: string
-    ): User{        
+    ): User{
         let user =  new User();
 
         user.username = username;
         user.password = password;
         user.firstName = firstName;
         user.lastName = lastName;
+        user.isDeleting = false;
 
         return user;
     }

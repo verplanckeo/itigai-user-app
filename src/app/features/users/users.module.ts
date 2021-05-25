@@ -5,6 +5,7 @@ import { UsersRoutingModule } from './users-routing.module';
 
 import { LayoutComponent } from './layout/layout.component';
 import { ListComponent } from './list/list.component';
+import { AddEditComponent } from './add-edit/add-edit.component';
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import { ListComponent } from './list/list.component';
     ],
     declarations: [
         LayoutComponent,
-        ListComponent
+        ListComponent,
+        AddEditComponent
     ]
 })
 export class UsersModule { }
